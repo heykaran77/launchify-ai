@@ -21,15 +21,15 @@ export async function POST(request: NextRequest) {
     }
 
     const validVoiceTypes = [
-      'professional_male',
-      'professional_female',
-      'energetic',
-      'calm',
+      'executive_male',
+      'executive_female',
+      'presenter_male',
+      'presenter_female',
     ];
     const selectedVoiceType =
       voiceType && validVoiceTypes.includes(voiceType)
         ? (voiceType as VoiceType)
-        : 'professional_female';
+        : 'executive_female';
 
     const audioResult = await generateAudio(
       text,
