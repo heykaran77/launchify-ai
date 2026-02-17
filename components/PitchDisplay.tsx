@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { FiPlay, FiPause, FiDownload, FiCopy, FiCheck } from 'react-icons/fi';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useState, useRef, useEffect } from "react";
+import { FiPlay, FiPause, FiDownload, FiCopy, FiCheck } from "react-icons/fi";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { HelpCircle } from 'lucide-react';
+} from "@/components/ui/tooltip";
+import { HelpCircle } from "lucide-react";
 
-type Language = 'en' | 'es' | 'fr' | 'ja' | 'hi' | 'de';
+type Language = "en" | "es" | "fr" | "ja" | "hi" | "de";
 
 interface LanguageCache {
   translatedText: string;
@@ -93,7 +93,7 @@ export default function PitchDisplay({
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   const handleCopy = () => {
@@ -106,36 +106,36 @@ export default function PitchDisplay({
 
   const getLanguageLabel = (code: Language) => {
     const labels = {
-      en: 'English',
-      es: 'Spanish',
-      fr: 'French',
-      ja: 'Japanese',
-      hi: 'Hindi',
-      de: 'German',
+      en: "English",
+      es: "Spanish",
+      fr: "French",
+      ja: "Japanese",
+      hi: "Hindi",
+      de: "German",
     };
     return labels[code];
   };
 
   // Check if a language has cached content
   const hasLanguageContent = (lang: Language) => {
-    return languageCache[lang].translatedText !== '';
+    return languageCache[lang].translatedText !== "";
   };
 
   return (
     <TooltipProvider>
-      <div className="bg-card border border-border rounded-lg p-6 shadow-sm space-y-6">
+      <div className="bg-card border-border space-y-6 rounded-lg border p-6 shadow-sm">
         {/* Header with Language Selector */}
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Generated Pitch</h2>
 
           <div className="flex items-center gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
-                <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
+                <HelpCircle className="text-muted-foreground h-4 w-4 cursor-help" />
               </TooltipTrigger>
               <TooltipContent>
                 <p>Switch languages to see cached translations</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   ✓ = Already translated
                 </p>
               </TooltipContent>
@@ -143,28 +143,29 @@ export default function PitchDisplay({
             <Select
               value={language}
               onValueChange={(value) => onLanguageChange(value as Language)}
-              disabled={isGeneratingAudio}>
+              disabled={isGeneratingAudio}
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="en">
-                  🇬🇧 English {hasLanguageContent('en') && '✓'}
+                  🇬🇧 English {hasLanguageContent("en") && "✓"}
                 </SelectItem>
                 <SelectItem value="es">
-                  🇪🇸 Spanish {hasLanguageContent('es') && '✓'}
+                  🇪🇸 Spanish {hasLanguageContent("es") && "✓"}
                 </SelectItem>
                 <SelectItem value="fr">
-                  🇫🇷 French {hasLanguageContent('fr') && '✓'}
+                  🇫🇷 French {hasLanguageContent("fr") && "✓"}
                 </SelectItem>
                 <SelectItem value="ja">
-                  🇯🇵 Japanese {hasLanguageContent('ja') && '✓'}
+                  🇯🇵 Japanese {hasLanguageContent("ja") && "✓"}
                 </SelectItem>
                 <SelectItem value="hi">
-                  🇮🇳 Hindi {hasLanguageContent('hi') && '✓'}
+                  🇮🇳 Hindi {hasLanguageContent("hi") && "✓"}
                 </SelectItem>
                 <SelectItem value="de">
-                  🇩🇪 German {hasLanguageContent('de') && '✓'}
+                  🇩🇪 German {hasLanguageContent("de") && "✓"}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -173,24 +174,25 @@ export default function PitchDisplay({
 
         {/* Pitch Text */}
         <div className="relative">
-          <div className="bg-secondary/50 border border-border rounded-md p-4 text-sm leading-relaxed whitespace-pre-wrap">
+          <div className="bg-secondary/50 border-border rounded-md border p-4 text-sm leading-relaxed whitespace-pre-wrap">
             {pitchText}
           </div>
           <button
             onClick={handleCopy}
-            className="absolute top-2 right-2 p-2 hover:bg-background rounded-md transition-colors"
-            title="Copy to clipboard">
+            className="hover:bg-background absolute top-2 right-2 rounded-md p-2 transition-colors"
+            title="Copy to clipboard"
+          >
             {copied ? (
-              <FiCheck className="w-4 h-4 text-primary" />
+              <FiCheck className="text-primary h-4 w-4" />
             ) : (
-              <FiCopy className="w-4 h-4" />
+              <FiCopy className="h-4 w-4" />
             )}
           </button>
         </div>
 
         {/* Audio Player - Show skeleton if generating, otherwise show player */}
         {isGeneratingAudio && !audioUrl ? (
-          <div className="bg-secondary/30 border border-border rounded-md p-4 space-y-3">
+          <div className="bg-secondary/30 border-border space-y-3 rounded-md border p-4">
             <div className="flex items-center gap-4">
               <Skeleton className="h-12 w-12 rounded-full" />
               <div className="flex-1 space-y-2">
@@ -201,17 +203,18 @@ export default function PitchDisplay({
             </div>
           </div>
         ) : audioUrl ? (
-          <div className="bg-secondary/30 border border-border rounded-md p-4 space-y-3">
+          <div className="bg-secondary/30 border-border space-y-3 rounded-md border p-4">
             {/* Play/Pause and Download Row */}
             <div className="flex items-center gap-4">
               <button
                 onClick={handlePlayPause}
                 disabled={!audioUrl}
-                className="bg-primary text-primary-foreground p-3 rounded-full hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shrink-0">
+                className="bg-primary text-primary-foreground shrink-0 rounded-full p-3 transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
                 {isPlaying ? (
-                  <FiPause className="w-5 h-5" />
+                  <FiPause className="h-5 w-5" />
                 ) : (
-                  <FiPlay className="w-5 h-5 ml-0.5" />
+                  <FiPlay className="ml-0.5 h-5 w-5" />
                 )}
               </button>
 
@@ -219,16 +222,17 @@ export default function PitchDisplay({
               <div className="flex-1 space-y-2">
                 {/* Progress Bar */}
                 <div
-                  className="h-2 bg-secondary rounded-full cursor-pointer relative"
-                  onClick={handleProgressClick}>
+                  className="bg-secondary relative h-2 cursor-pointer rounded-full"
+                  onClick={handleProgressClick}
+                >
                   <div
-                    className="h-full bg-primary rounded-full transition-all"
+                    className="bg-primary h-full rounded-full transition-all"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
 
                 {/* Time Display */}
-                <div className="flex justify-between text-xs text-muted-foreground">
+                <div className="text-muted-foreground flex justify-between text-xs">
                   <span>{formatTime(currentTime)}</span>
                   <span>{formatTime(duration)}</span>
                 </div>
@@ -237,8 +241,9 @@ export default function PitchDisplay({
               <a
                 href={audioUrl}
                 download={`pitch_${language}.mp3`}
-                className="flex items-center gap-2 px-4 py-2 bg-background border border-border rounded-md hover:bg-secondary transition-colors shrink-0">
-                <FiDownload className="w-4 h-4" />
+                className="bg-background border-border hover:bg-secondary flex shrink-0 items-center gap-2 rounded-md border px-4 py-2 transition-colors"
+              >
+                <FiDownload className="h-4 w-4" />
                 <span className="text-sm">Download</span>
               </a>
             </div>
@@ -259,15 +264,15 @@ export default function PitchDisplay({
         {/* Languages with cached content indicator */}
         {Object.keys(languageCache).some(
           (lang) =>
-            languageCache[lang as Language].translatedText !== '' &&
+            languageCache[lang as Language].translatedText !== "" &&
             lang !== language,
         ) && (
-          <div className="text-xs text-muted-foreground">
-            Available languages:{' '}
-            {(['en', 'es', 'fr', 'ja', 'hi', 'de'] as Language[])
+          <div className="text-muted-foreground text-xs">
+            Available languages:{" "}
+            {(["en", "es", "fr", "ja", "hi", "de"] as Language[])
               .filter((lang) => hasLanguageContent(lang))
               .map((lang) => getLanguageLabel(lang))
-              .join(', ')}
+              .join(", ")}
           </div>
         )}
       </div>

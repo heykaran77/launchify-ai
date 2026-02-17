@@ -276,34 +276,35 @@ export default function Page() {
   return (
     <TooltipProvider>
       <Container className="py-12">
-        <div className="max-w-4xl mx-auto space-y-12">
+        <div className="mx-auto max-w-4xl space-y-12">
           {/* Header */}
-          <div className="text-center space-y-4">
+          <div className="space-y-4 text-center">
             <h1 className="text-4xl font-bold tracking-tight">Launchify AI</h1>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-muted-foreground text-lg">
               Turn your GitHub repository into a compelling startup pitch with
               AI
             </p>
           </div>
 
           {/* Input Form */}
-          <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
+          <div className="bg-card border-border rounded-lg border p-6 shadow-sm">
             <div className="space-y-6">
               {/* GitHub URL Input */}
               <div>
-                <div className="flex items-center gap-2 mb-2">
+                <div className="mb-2 flex items-center gap-2">
                   <label
                     htmlFor="repo-url"
-                    className="block text-sm font-medium text-left">
+                    className="block text-left text-sm font-medium"
+                  >
                     GitHub Repository URL
                   </label>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
+                      <HelpCircle className="text-muted-foreground h-4 w-4 cursor-help" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Enter the full URL of your GitHub repository</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-muted-foreground text-xs">
                         Example: https://github.com/username/repo
                       </p>
                     </TooltipContent>
@@ -315,7 +316,7 @@ export default function Page() {
                   placeholder="https://github.com/username/repo"
                   value={repoUrl}
                   onChange={(e) => setRepoUrl(e.target.value)}
-                  className="w-full px-4 py-2 border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="border-input bg-background focus:ring-ring w-full rounded-md border px-4 py-2 focus:ring-2 focus:outline-none"
                   disabled={isLoading}
                 />
               </div>
@@ -323,17 +324,17 @@ export default function Page() {
               <div className="grid grid-cols-2 gap-4">
                 {/* Language Selector */}
                 <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <label className="block text-sm font-medium text-left">
+                  <div className="mb-2 flex items-center gap-2">
+                    <label className="block text-left text-sm font-medium">
                       Output Language
                     </label>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
+                        <HelpCircle className="text-muted-foreground h-4 w-4 cursor-help" />
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>Choose the language for your pitch</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-muted-foreground text-xs">
                           Supports 6 languages with AI translation
                         </p>
                       </TooltipContent>
@@ -344,7 +345,8 @@ export default function Page() {
                     onValueChange={(value) =>
                       setSelectedLang(value as Language)
                     }
-                    disabled={isLoading}>
+                    disabled={isLoading}
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -361,17 +363,17 @@ export default function Page() {
 
                 {/* Pitch Type Selector */}
                 <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <label className="block text-sm font-medium text-left">
+                  <div className="mb-2 flex items-center gap-2">
+                    <label className="block text-left text-sm font-medium">
                       Pitch Length
                     </label>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
+                        <HelpCircle className="text-muted-foreground h-4 w-4 cursor-help" />
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>Select the duration of your pitch</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-muted-foreground text-xs">
                           30s: Elevator, 60s: Investor, 90s: Demo
                         </p>
                       </TooltipContent>
@@ -380,7 +382,8 @@ export default function Page() {
                   <Select
                     value={pitchType}
                     onValueChange={(value) => setPitchType(value as PitchType)}
-                    disabled={isLoading}>
+                    disabled={isLoading}
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -401,17 +404,17 @@ export default function Page() {
 
               {/* Voice Type Selector */}
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <label className="block text-sm font-medium text-left">
+                <div className="mb-2 flex items-center gap-2">
+                  <label className="block text-left text-sm font-medium">
                     Voice Type
                   </label>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
+                      <HelpCircle className="text-muted-foreground h-4 w-4 cursor-help" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Choose the voice style for audio generation</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-muted-foreground text-xs">
                         Powered by ElevenLabs Flash v2.5
                       </p>
                     </TooltipContent>
@@ -420,7 +423,8 @@ export default function Page() {
                 <Select
                   value={voiceType}
                   onValueChange={(value) => setVoiceType(value as VoiceType)}
-                  disabled={isLoading}>
+                  disabled={isLoading}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -441,13 +445,14 @@ export default function Page() {
               <button
                 onClick={handleGenerate}
                 disabled={isLoading}
-                className="w-full bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                className="bg-primary text-primary-foreground w-full rounded-md px-6 py-3 font-medium transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
                 {isLoading ? loadingStage : 'Generate Pitch'}
               </button>
 
               {/* Error Display */}
               {error && (
-                <div className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md p-3">
+                <div className="text-destructive bg-destructive/10 border-destructive/20 rounded-md border p-3 text-sm">
                   {error}
                 </div>
               )}
