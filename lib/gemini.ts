@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' }); // Using flash for faster responses
+const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' }); // User requested Gemini 2 Flash Lite
 
 export type PitchType = '30s' | '60s' | '90s';
 
@@ -17,58 +17,69 @@ interface RepoContext {
   techStack: string[];
   readmeSummary: string;
   stars: number;
+  forks: number;
 }
 
 /**
  * Generate pitch prompt based on type
  */
+/**
+ * Generate pitch prompt based on type
+ */
 function buildPrompt(repoContext: RepoContext, pitchType: PitchType): string {
-  const targetWordCount = {
-    '30s': 70,
-    '60s': 130,
-    '90s': 200,
-  }[pitchType];
+  const targetLength =
+    pitchType === '30s'
+      ? '75-90 words'
+      : pitchType === '60s'
+        ? '150-180 words'
+        : '225-270 words';
 
-  const pitchStyle = {
-    '30s': 'elevator pitch',
-    '60s': 'investor pitch',
-    '90s': 'product demo narration',
-  }[pitchType];
+  const focusMap = {
+    '30s': 'core value proposition',
+    '60s': 'problem-solution-differentiation',
+    '90s': 'comprehensive story with technical depth',
+  };
 
-  const structure = {
-    '30s':
-      'Open with a bold problem statement, present the solution in one clear sentence, and end with a memorable hook.',
-    '60s':
-      'Start with the problem your target users face, explain your solution and unique approach, mention any traction or validation, and close with the vision.',
-    '90s':
-      'Set the context of the problem space, walk through key features and how they solve real pain points, emphasize technical innovation or unique approach, and end with a clear call-to-action.',
-  }[pitchType];
+  return `You are an expert startup pitch consultant and technical storyteller.
 
-  return `You are an expert startup pitch writer with deep knowledge of developer tools and technical products.
+CONTEXT:
+Repository: ${repoContext.name}
+Description: ${repoContext.description || 'Not provided'}
+Tech Stack: ${repoContext.techStack.join(', ')}
+GitHub Stars: ${repoContext.stars} | Forks: ${repoContext.forks || 0}
+Readme Summary: ${repoContext.readmeSummary}
 
-**Repository Context:**
-- Project Name: ${repoContext.name}
-- Description: ${repoContext.description || 'Not provided'}
-- Tech Stack: ${repoContext.techStack.join(', ')}
-- GitHub Stars: ${repoContext.stars}
-- About: ${repoContext.readmeSummary}
+TASK:
+Create a ${pitchType} ${focusMap[pitchType]} startup pitch for this repository.
 
-**Your Task:**
-Create a compelling ${pitchStyle} that will be delivered as a voice narration.
+REQUIREMENTS:
+- Length: Exactly ${targetLength} for natural speech delivery
+- Focus: ${focusMap[pitchType]}
+- Structure:
+  ${
+    pitchType === '30s'
+      ? '1. Hook (problem/opportunity)\n  2. Solution (what this does)\n  3. Impact (why it matters)'
+      : pitchType === '60s'
+        ? '1. Problem (15-20%)\n  2. Solution (40-50%)\n  3. Market/Traction (15-20%)\n  4. Call-to-action (10-15%)'
+        : '1. Opening hook (10%)\n  2. Problem context (20%)\n  3. Technical solution (40%)\n  4. Differentiation (15%)\n  5. Growth/Vision (15%)'
+  }
+- Tone: Professional yet conversational, enthusiastic but credible
+- Language: Simple, jargon-free explanations (except when tech stack is relevant)
+- Avoid: Generic buzzwords, hyperbolic claims, over-technical details
 
-**Requirements:**
-- Target length: ${targetWordCount} words (±10 words)
-- Structure: ${structure}
-- Tone: Confident, visionary, and technical but accessible
-- Focus on BENEFITS not just features (answer "so what?" for every claim)
-- Use specific, concrete language over vague terms
-- Make it sound natural when spoken aloud
-- Avoid marketing clichés like "revolutionary," "game-changing," "cutting-edge"
+OUTPUT FORMAT:
+Return ONLY the pitch text. No preamble, no labels, no metadata. 
+Start immediately with the first sentence of the pitch.
 
-**Structure Guidelines:**
-${structure}
+QUALITY CHECKLIST:
+✓ Speaks naturally when read aloud
+✓ Clear problem-solution narrative
+✓ Specific to this repository (not generic)
+✓ Highlights unique technical approach
+✓ Creates emotional connection
+✓ Actionable next step/vision
 
-Generate ONLY the pitch text. No preamble, no explanations, just the pitch script.`;
+Generate the pitch now:`;
 }
 
 /**
