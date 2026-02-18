@@ -4,6 +4,21 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('/fonts/PlayfairDisplay.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Playfair Display Italic';
+  src: url('/fonts/PlayfairDisplay-Italic.ttf') format('truetype');
+}
+
+@theme {
+  --font-playfair: 'Playfair Display', serif;
+  --font-playfair-italic: 'Playfair Display Italic', serif;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -122,5 +137,8 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  button {
+    @apply cursor-pointer;
   }
 }
