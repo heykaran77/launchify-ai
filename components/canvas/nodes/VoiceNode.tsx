@@ -35,7 +35,7 @@ interface VoiceNodeData {
 
 export default function VoiceNode({ data, id }: NodeProps<VoiceNodeData>) {
   const [voiceType, setVoiceType] = useState('executive_female');
-  const [audioUrl, setAudioUrl] = useState('');
+  const [audioBase64, setAudioBase64] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState([1.0]);
@@ -48,9 +48,9 @@ export default function VoiceNode({ data, id }: NodeProps<VoiceNodeData>) {
   // When voice type changes, check cache
   useEffect(() => {
     if (cache[voiceType]) {
-      setAudioUrl(cache[voiceType]);
+      setAudioBase64(cache[voiceType]);
     } else {
-      setAudioUrl('');
+      setAudioBase64('');
     }
   }, [voiceType, cache]);
 
@@ -64,7 +64,7 @@ export default function VoiceNode({ data, id }: NodeProps<VoiceNodeData>) {
   const handleGenerateAudio = async () => {
     // Check cache
     if (cache[voiceType]) {
-      setAudioUrl(cache[voiceType]);
+      setAudioBase64(cache[voiceType]);
       return;
     }
 
@@ -83,8 +83,8 @@ export default function VoiceNode({ data, id }: NodeProps<VoiceNodeData>) {
       if (!res.ok) throw new Error('Audio generation failed');
 
       const result = await res.json();
-      setAudioUrl(result.audioUrl);
-      setCache((prev) => ({ ...prev, [voiceType]: result.audioUrl }));
+      setAudioBase64(result.audioBase64);
+      setCache((prev) => ({ ...prev, [voiceType]: result.audioBase64 }));
     } catch (error) {
       console.error('Audio error:', error);
     } finally {
@@ -104,9 +104,9 @@ export default function VoiceNode({ data, id }: NodeProps<VoiceNodeData>) {
   };
 
   const handleDownload = () => {
-    if (!audioUrl) return;
+    if (!audioBase64) return;
     const link = document.createElement('a');
-    link.href = audioUrl;
+    link.href = audioBase64;
     link.download = `pitch-${voiceType}.mp3`;
     document.body.appendChild(link);
     link.click();
@@ -171,7 +171,7 @@ export default function VoiceNode({ data, id }: NodeProps<VoiceNodeData>) {
                 Generating audio...
               </span>
             </div>
-          ) : audioUrl ? (
+          ) : audioBase64 ? (
             <>
               <div className="flex items-center gap-3">
                 <Button
@@ -205,7 +205,7 @@ export default function VoiceNode({ data, id }: NodeProps<VoiceNodeData>) {
               {/* Audio Element */}
               <audio
                 ref={audioRef}
-                src={audioUrl}
+                src={audioBase64}
                 onEnded={() => setIsPlaying(false)}
                 className="hidden"
               />
@@ -230,7 +230,7 @@ export default function VoiceNode({ data, id }: NodeProps<VoiceNodeData>) {
 
       <CardFooter className="bg-muted/20 flex items-center justify-between p-3">
         <div className="flex w-1/2 items-center gap-2">
-          {audioUrl && (
+          {audioBase64 && (
             <>
               <Volume2 className="text-muted-foreground h-3 w-3" />
               <Slider
@@ -244,7 +244,7 @@ export default function VoiceNode({ data, id }: NodeProps<VoiceNodeData>) {
           )}
         </div>
 
-        {audioUrl && (
+        {audioBase64 && (
           <div className="flex gap-2">
             <Button
               variant="ghost"

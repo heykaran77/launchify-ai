@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { FiPlay, FiPause, FiDownload, FiCopy, FiCheck } from "react-icons/fi";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useState, useRef, useEffect } from 'react';
+import { FiPlay, FiPause, FiDownload, FiCopy, FiCheck } from 'react-icons/fi';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { HelpCircle } from "lucide-react";
+} from '@/components/ui/tooltip';
+import { HelpCircle } from 'lucide-react';
 
-type Language = "en" | "es" | "fr" | "ja" | "hi" | "de";
+type Language = 'en' | 'es' | 'fr' | 'ja' | 'hi' | 'de';
 
 interface LanguageCache {
   translatedText: string;
@@ -27,7 +27,7 @@ interface LanguageCache {
 
 interface PitchDisplayProps {
   pitchText: string;
-  audioUrl: string;
+  audioBase64: string;
   language: Language;
   onLanguageChange: (lang: Language) => void;
   isGeneratingAudio: boolean;
@@ -36,7 +36,7 @@ interface PitchDisplayProps {
 
 export default function PitchDisplay({
   pitchText,
-  audioUrl,
+  audioBase64,
   language,
   onLanguageChange,
   isGeneratingAudio,
@@ -50,12 +50,12 @@ export default function PitchDisplay({
 
   // Reset playback when audio URL changes
   useEffect(() => {
-    if (audioRef.current && audioUrl) {
+    if (audioRef.current && audioBase64) {
       audioRef.current.load();
       setIsPlaying(false);
       setCurrentTime(0);
     }
-  }, [audioUrl]);
+  }, [audioBase64]);
 
   const handlePlayPause = () => {
     if (!audioRef.current) return;
@@ -93,7 +93,7 @@ export default function PitchDisplay({
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
   const handleCopy = () => {
@@ -106,19 +106,19 @@ export default function PitchDisplay({
 
   const getLanguageLabel = (code: Language) => {
     const labels = {
-      en: "English",
-      es: "Spanish",
-      fr: "French",
-      ja: "Japanese",
-      hi: "Hindi",
-      de: "German",
+      en: 'English',
+      es: 'Spanish',
+      fr: 'French',
+      ja: 'Japanese',
+      hi: 'Hindi',
+      de: 'German',
     };
     return labels[code];
   };
 
   // Check if a language has cached content
   const hasLanguageContent = (lang: Language) => {
-    return languageCache[lang].translatedText !== "";
+    return languageCache[lang].translatedText !== '';
   };
 
   return (
@@ -150,22 +150,22 @@ export default function PitchDisplay({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="en">
-                  🇬🇧 English {hasLanguageContent("en") && "✓"}
+                  🇬🇧 English {hasLanguageContent('en') && '✓'}
                 </SelectItem>
                 <SelectItem value="es">
-                  🇪🇸 Spanish {hasLanguageContent("es") && "✓"}
+                  🇪🇸 Spanish {hasLanguageContent('es') && '✓'}
                 </SelectItem>
                 <SelectItem value="fr">
-                  🇫🇷 French {hasLanguageContent("fr") && "✓"}
+                  🇫🇷 French {hasLanguageContent('fr') && '✓'}
                 </SelectItem>
                 <SelectItem value="ja">
-                  🇯🇵 Japanese {hasLanguageContent("ja") && "✓"}
+                  🇯🇵 Japanese {hasLanguageContent('ja') && '✓'}
                 </SelectItem>
                 <SelectItem value="hi">
-                  🇮🇳 Hindi {hasLanguageContent("hi") && "✓"}
+                  🇮🇳 Hindi {hasLanguageContent('hi') && '✓'}
                 </SelectItem>
                 <SelectItem value="de">
-                  🇩🇪 German {hasLanguageContent("de") && "✓"}
+                  🇩🇪 German {hasLanguageContent('de') && '✓'}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -191,7 +191,7 @@ export default function PitchDisplay({
         </div>
 
         {/* Audio Player - Show skeleton if generating, otherwise show player */}
-        {isGeneratingAudio && !audioUrl ? (
+        {isGeneratingAudio && !audioBase64 ? (
           <div className="bg-secondary/30 border-border space-y-3 rounded-md border p-4">
             <div className="flex items-center gap-4">
               <Skeleton className="h-12 w-12 rounded-full" />
@@ -202,13 +202,13 @@ export default function PitchDisplay({
               <Skeleton className="h-10 w-28" />
             </div>
           </div>
-        ) : audioUrl ? (
+        ) : audioBase64 ? (
           <div className="bg-secondary/30 border-border space-y-3 rounded-md border p-4">
             {/* Play/Pause and Download Row */}
             <div className="flex items-center gap-4">
               <button
                 onClick={handlePlayPause}
-                disabled={!audioUrl}
+                disabled={!audioBase64}
                 className="bg-primary text-primary-foreground shrink-0 rounded-full p-3 transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isPlaying ? (
@@ -239,7 +239,7 @@ export default function PitchDisplay({
               </div>
 
               <a
-                href={audioUrl}
+                href={audioBase64}
                 download={`pitch_${language}.mp3`}
                 className="bg-background border-border hover:bg-secondary flex shrink-0 items-center gap-2 rounded-md border px-4 py-2 transition-colors"
               >
@@ -251,7 +251,7 @@ export default function PitchDisplay({
             {/* Hidden Audio Element */}
             <audio
               ref={audioRef}
-              src={audioUrl}
+              src={audioBase64}
               onTimeUpdate={handleTimeUpdate}
               onLoadedMetadata={handleLoadedMetadata}
               onEnded={() => setIsPlaying(false)}
@@ -264,15 +264,15 @@ export default function PitchDisplay({
         {/* Languages with cached content indicator */}
         {Object.keys(languageCache).some(
           (lang) =>
-            languageCache[lang as Language].translatedText !== "" &&
+            languageCache[lang as Language].translatedText !== '' &&
             lang !== language,
         ) && (
           <div className="text-muted-foreground text-xs">
-            Available languages:{" "}
-            {(["en", "es", "fr", "ja", "hi", "de"] as Language[])
+            Available languages:{' '}
+            {(['en', 'es', 'fr', 'ja', 'hi', 'de'] as Language[])
               .filter((lang) => hasLanguageContent(lang))
               .map((lang) => getLanguageLabel(lang))
-              .join(", ")}
+              .join(', ')}
           </div>
         )}
       </div>
