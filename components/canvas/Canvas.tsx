@@ -5,7 +5,6 @@ import ReactFlow, {
   Background,
   Controls,
   MiniMap,
-  Panel,
   useReactFlow,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
@@ -13,9 +12,6 @@ import 'reactflow/dist/style.css';
 import { Session } from '@/lib/sessions';
 import { useCanvasStore } from '@/store/useCanvasStore';
 import GitHubNode from './nodes/GitHubNode';
-import { Button } from '@/components/ui/button';
-import { Download, Save } from 'lucide-react';
-
 import GeminiNode from './nodes/GeminiNode';
 
 import LingoNode from './nodes/LingoNode';
@@ -91,17 +87,6 @@ export default function Canvas({ session }: CanvasProps) {
         <Background gap={16} size={1} />
         <Controls />
         {/* <MiniMap /> */}
-
-        <Panel position="top-right" className="flex gap-2">
-          <Button size="sm" variant="outline">
-            <Save className="mr-2 h-4 w-4" />
-            Save Session
-          </Button>
-          <Button size="sm" variant="outline">
-            <Download className="mr-2 h-4 w-4" />
-            Export
-          </Button>
-        </Panel>
       </ReactFlow>
     </div>
   );
