@@ -1,6 +1,4 @@
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
-import fs from 'fs';
-import path from 'path';
 
 const client = new ElevenLabsClient({
   apiKey: process.env.ELEVENLABS_API_KEY || '',
@@ -23,9 +21,8 @@ const VOICE_MAP: Record<VoiceType, string> = {
 };
 
 export interface AudioResult {
-  audioUrl: string;
+  audioBase64: string;
   duration: number;
-  filename: string;
 }
 
 /**
@@ -55,18 +52,7 @@ export async function generateAudio(
       },
     });
 
-    // Generate unique filename
-    const timestamp = Date.now();
-    const filename = `pitch_${language}_${timestamp}.mp3`;
-    const audioDir = path.join(process.cwd(), 'public', 'audio');
-    const filepath = path.join(audioDir, filename);
-
-    // Ensure audio directory exists
-    if (!fs.existsSync(audioDir)) {
-      fs.mkdirSync(audioDir, { recursive: true });
-    }
-
-    // Write audio stream to file
+    // Generate an array of chunks from stream
     const chunks: Uint8Array[] = [];
     // @ts-ignore - ElevenLabs SDK stream type compatibility
     for await (const chunk of audioStream) {
@@ -74,33 +60,18 @@ export async function generateAudio(
     }
 
     const audioBuffer = Buffer.concat(chunks);
-    fs.writeFileSync(filepath, audioBuffer);
+    const audioBase64 = `data:audio/mp3;base64,${audioBuffer.toString('base64')}`;
 
     // Estimate duration (rough calculation: ~150 words/minute)
     const wordCount = text.split(/\s+/).length;
     const duration = Math.round(wordCount * 0.4); // seconds
 
     return {
-      audioUrl: `/audio/${filename}`,
+      audioBase64,
       duration,
-      filename,
     };
   } catch (error: any) {
     console.error('ElevenLabs TTS error:', error);
     throw new Error(`Audio generation failed: ${error.message}`);
-  }
-}
-
-/**
- * Delete audio file from server
- */
-export function deleteAudioFile(filename: string): void {
-  try {
-    const filepath = path.join(process.cwd(), 'public', 'audio', filename);
-    if (fs.existsSync(filepath)) {
-      fs.unlinkSync(filepath);
-    }
-  } catch (error) {
-    console.error('Failed to delete audio file:', error);
   }
 }
