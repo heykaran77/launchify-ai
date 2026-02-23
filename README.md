@@ -3,7 +3,7 @@
 ![Launchify AI Grid](public/meta/opengraph.png)
 
 🎥 **Watch Demo Video:**  
-[▶️ Click here to watch on YouTube](https://youtube.com/YOUR_VIDEO_LINK_HERE)
+[▶️ Click here to watch on YouTube](https://youtu.be/IX3B1y0_s4g)
 
 **Transform your GitHub repository into a compelling startup pitch in seconds.**
 
