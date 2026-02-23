@@ -2,6 +2,9 @@
 
 ![Launchify AI Grid](public/meta/opengraph.png)
 
+🎥 **Watch Demo Video:**  
+[▶️ Click here to watch on YouTube](https://youtube.com/YOUR_VIDEO_LINK_HERE)
+
 **Transform your GitHub repository into a compelling startup pitch in seconds.**
 
 Launchify AI analyzes your code, understands your project's value proposition, and generates a professional startup pitch complete with voice narration and multi-language support. Turn your side projects into investable stories without writing a single word of copy.
